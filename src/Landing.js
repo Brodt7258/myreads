@@ -3,14 +3,14 @@ import { Link } from 'react-router-dom';
 
 import Shelf from './Shelf';
 
-const Landing = (props) => {
-  console.log('Landing', props.books)
+const Landing = ({ books }) => {
+  console.log('Landing', books)
 
   const currentlyReading = [];
   const wantToRead = [];
   const read = [];
 
-  props.books.forEach(book => {
+  books.forEach(book => {
     switch (book.shelf) {
       case 'currentlyReading':
         currentlyReading.push(book);
