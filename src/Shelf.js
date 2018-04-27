@@ -1,5 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+
+import Book from './Book';
 
 const Shelf = ({ title, books }) => {
   console.log(books);
@@ -8,11 +9,8 @@ const Shelf = ({ title, books }) => {
       <h2 className="bookshelf-title">{title}</h2>
       <div className="bookshelf-books">
         <ol className="books-grid">
-        {books && books.map((book) => <li key={book.title}>{book.title}</li>)}
+          {books && books.map((book) => <Book key={book.title} book={book} />)}
         </ol>
-      </div>
-      <div className="open-search">
-        <Link to="/search">Add a book</Link>
       </div>
     </div>
   );
