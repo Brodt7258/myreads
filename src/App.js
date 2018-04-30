@@ -28,7 +28,12 @@ class BooksApp extends React.Component {
               <Landing books={this.state.books} />
             )}
           />
-          <Route path="/search" component={BookSearch} />
+          <Route
+            path="/search"
+            render={() => (
+              <BookSearch books={this.state.books}/>    
+            )}
+          />
         </div>
       </BrowserRouter>
     );

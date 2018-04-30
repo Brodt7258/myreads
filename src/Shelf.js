@@ -9,7 +9,7 @@ const Shelf = ({ title, books }) => {
       <h2 className="bookshelf-title">{title}</h2>
       <div className="bookshelf-books">
         <ol className="books-grid">
-          {books && books.map((book) => <Book key={book.title} book={book} />)}
+          {books && books.map((book) => <Book key={book.id} book={book} />)}
         </ol>
       </div>
     </div>
