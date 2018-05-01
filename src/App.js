@@ -13,7 +13,26 @@ class BooksApp extends React.Component {
   }
 
   componentDidMount() {
-    BooksAPI.getAll().then(books => this.setState({books}));
+    BooksAPI.getAll().then(books => {
+      console.log('getAll', books);
+      this.setState({ books })
+    });
+  }
+
+  handleBookUpdate(book, shelf) {
+    BooksAPI.update(book, shelf).then(() => {
+      this.setState(prevState => {
+        const updatedBook = {...book, shelf};
+        const books = prevState.books.filter(prevBook => prevBook.id !== book.id);
+        //updatedBook.shelf = shelf;
+        books.push(updatedBook);
+        
+        console.log('updatedBook', updatedBook);
+        console.log('newState', books);
+
+        return { books };
+      });
+    });
   }
 
   render() {
@@ -21,11 +40,20 @@ class BooksApp extends React.Component {
     return (
       <BrowserRouter>
         <div className="app">
+        {
+          //test functions, delete later
+          <div>
+            <button onClick={() => this.handleBookUpdate({ ...this.state.books[0] }, 'currentlyReading' )}>test currentlyReading</button>
+            <button onClick={() => this.handleBookUpdate({ ...this.state.books[0] }, 'wantToRead' )}>test wantToRead</button>
+            <button onClick={() => this.handleBookUpdate({ ...this.state.books[0] }, 'read' )}>test read</button>
+            <button onClick={() => this.handleBookUpdate({ ...this.state.books[0] }, 'none' )}>test none</button>
+          </div>
+        }
           <Route
             exact
             path="/" 
             render={() => (
-              <Landing books={this.state.books} />
+              <Landing books={this.state.books} onBookUpdate={this.handleBookUpdate} />
             )}
           />
           <Route

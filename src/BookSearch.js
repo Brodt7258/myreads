@@ -22,7 +22,7 @@ class BookSearch extends Component {
             this.setState({ found: [] });
           } else {
             this.setState({ found: found.map(book => {
-              const existing = this.props.books.find(existing => existing.id === book.id)
+              const existing = this.props.books.find(existing => existing.id === book.id);
               if (existing) {
                 book.shelf = existing.shelf;
               } else {
