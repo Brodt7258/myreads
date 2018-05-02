@@ -19,19 +19,9 @@ class BooksApp extends React.Component {
     });
   }
 
-  handleBookUpdate(book, shelf) {
+  handleBookUpdate = (book, shelf) => {
     BooksAPI.update(book, shelf).then(() => {
-      this.setState(prevState => {
-        const updatedBook = {...book, shelf};
-        const books = prevState.books.filter(prevBook => prevBook.id !== book.id);
-        //updatedBook.shelf = shelf;
-        books.push(updatedBook);
-        
-        console.log('updatedBook', updatedBook);
-        console.log('newState', books);
-
-        return { books };
-      });
+      this.setState(prevState => { books: prevState.books.map(prevBook => prevBook.id === book.id ? { ...prevBook, shelf } : prevBook ) });
     });
   }
 
@@ -41,12 +31,12 @@ class BooksApp extends React.Component {
       <BrowserRouter>
         <div className="app">
         {
-          //test functions, delete later
+          //test stuff, delete later
           <div>
-            <button onClick={() => this.handleBookUpdate({ ...this.state.books[0] }, 'currentlyReading' )}>test currentlyReading</button>
-            <button onClick={() => this.handleBookUpdate({ ...this.state.books[0] }, 'wantToRead' )}>test wantToRead</button>
-            <button onClick={() => this.handleBookUpdate({ ...this.state.books[0] }, 'read' )}>test read</button>
-            <button onClick={() => this.handleBookUpdate({ ...this.state.books[0] }, 'none' )}>test none</button>
+            <button onClick={() => this.handleBookUpdate(this.state.books[0], 'currentlyReading' )}>test currentlyReading</button>
+            <button onClick={() => this.handleBookUpdate(this.state.books[0], 'wantToRead' )}>test wantToRead</button>
+            <button onClick={() => this.handleBookUpdate(this.state.books[0], 'read' )}>test read</button>
+            <button onClick={() => this.handleBookUpdate(this.state.books[0], 'none' )}>test none</button>
           </div>
         }
           <Route
@@ -59,7 +49,7 @@ class BooksApp extends React.Component {
           <Route
             path="/search"
             render={() => (
-              <BookSearch books={this.state.books}/>    
+              <BookSearch books={this.state.books} onBookUpdate={this.handleBookUpdate} />    
             )}
           />
         </div>

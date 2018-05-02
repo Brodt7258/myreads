@@ -1,13 +1,10 @@
 import React from 'react';
 
-const OPTIONS = [
-  { value: 'currentlyReading', name: 'Currently Reading' },
-  { value: 'wantToRead', name: 'Want To Read' },
-  { value: 'read', name: 'Read' },
-  { value: 'none', name: 'None' }
-];
-
-const Book = ({ book }) => {
+const Book = ({ book, onBookUpdate }) => {
+  
+  const handleBookUpdate = (e) => {
+    onBookUpdate(book, e.target.value);
+  }
   
   return (
     <li>
@@ -15,7 +12,7 @@ const Book = ({ book }) => {
         <div className="book-top">
           <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: book.imageLinks ? `url("${book.imageLinks.thumbnail}")` : ''}}></div>
           <div className="book-shelf-changer">
-            <select value={book.shelf}>
+            <select value={book.shelf} onChange={e => handleBookUpdate(e)}>
               <option value="desc" disabled>Move to...</option>
               <option value="currentlyReading">Currently Reading</option>
               <option value="wantToRead">Want to Read</option>
