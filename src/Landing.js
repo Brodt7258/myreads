@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import Shelf from './Shelf';
 
 const Landing = ({ books, onBookUpdate }) => {
-  console.log('Landing', books)
 
   const currentlyReading = [];
   const wantToRead = [];

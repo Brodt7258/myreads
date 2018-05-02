@@ -2,17 +2,16 @@ import React from 'react';
 
 const Book = ({ book, onBookUpdate }) => {
   
-  const handleBookUpdate = (e) => {
-    onBookUpdate(book, e.target.value);
-  }
-  
   return (
     <li>
       <div className="book">
         <div className="book-top">
           <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: book.imageLinks ? `url("${book.imageLinks.thumbnail}")` : ''}}></div>
           <div className="book-shelf-changer">
-            <select value={book.shelf} onChange={e => handleBookUpdate(e)}>
+            <select 
+              value={book.shelf}
+              onChange={e => onBookUpdate(book, e.target.value)}
+            >
               <option value="desc" disabled>Move to...</option>
               <option value="currentlyReading">Currently Reading</option>
               <option value="wantToRead">Want to Read</option>

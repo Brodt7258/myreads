@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 
 import * as BooksAPI from './BooksAPI';
 import Shelf from './Shelf';
@@ -7,7 +7,8 @@ import Shelf from './Shelf';
 class BookSearch extends Component {
   state = {
     query: '',
-    found: []
+    found: [],
+    err: false
   }
 
   updateQuery = (event) => {
@@ -19,7 +20,7 @@ class BookSearch extends Component {
       BooksAPI.search(query)
         .then(found => {
           if (!found || found.error) {
-            this.setState({ found: [] });
+            this.setState({ found: [], err: true });
           } else {
             this.setState({ found: found.map(book => {
               const existing = this.props.books.find(existing => existing.id === book.id);
@@ -29,18 +30,23 @@ class BookSearch extends Component {
                 book.shelf = 'none';
               }
               return book;
-            }) });
+            }), err: false });
           }
         });
     } else {
-      this.setState({ found: [] });
+      this.setState({ found: [], err: false });
     }
   }
 
-
+  onBookUpdate = (book, shelf) => {
+    console.log('BookSearch onBookUpdate');
+    this.props.onBookUpdate(book, shelf);
+    this.props.history.push('/');
+    
+  }
 
   render() {
-    const { query, found } = this.state;
+    const { query, found, err } = this.state;
     return (
       <div className="search-books">
         <div className="search-books-bar">
@@ -63,11 +69,14 @@ class BookSearch extends Component {
           </div>
         </div>
         <div className="search-books-results">
-          {found.length > 0 && <Shelf title={`Found ${found.length} results`} books={found}/>}
+          {err ? 
+              <Shelf title="Found 0 results, try again"/> 
+            : 
+              found.length > 0 && <Shelf title={`Found ${found.length} results`} books={found} onBookUpdate={this.onBookUpdate} />}
         </div>
       </div>
     );
   }
 }
 
-export default BookSearch;
+export default withRouter(BookSearch);

@@ -14,31 +14,27 @@ class BooksApp extends React.Component {
 
   componentDidMount() {
     BooksAPI.getAll().then(books => {
-      console.log('getAll', books);
       this.setState({ books })
     });
   }
 
   handleBookUpdate = (book, shelf) => {
     BooksAPI.update(book, shelf).then(() => {
-      this.setState(prevState => { books: prevState.books.map(prevBook => prevBook.id === book.id ? { ...prevBook, shelf } : prevBook ) });
+      this.setState(prevState => {
+        const newBooks = prevState.books.find(b => b.id === book.id) ?
+            prevState.books.map(prevBook => prevBook.id === book.id ? { ...prevBook, shelf } : prevBook ) 
+          :
+            prevState.books.concat({ ...book, shelf })
+        
+        return { books: newBooks.filter(newBook => newBook.shelf !== 'none')};
+      });
     });
   }
 
   render() {
-    console.log('render', this.state.books);
     return (
       <BrowserRouter>
         <div className="app">
-        {
-          //test stuff, delete later
-          <div>
-            <button onClick={() => this.handleBookUpdate(this.state.books[0], 'currentlyReading' )}>test currentlyReading</button>
-            <button onClick={() => this.handleBookUpdate(this.state.books[0], 'wantToRead' )}>test wantToRead</button>
-            <button onClick={() => this.handleBookUpdate(this.state.books[0], 'read' )}>test read</button>
-            <button onClick={() => this.handleBookUpdate(this.state.books[0], 'none' )}>test none</button>
-          </div>
-        }
           <Route
             exact
             path="/" 
