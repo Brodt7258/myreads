@@ -24,7 +24,7 @@ class BooksApp extends React.Component {
         const newBooks = prevState.books.find(b => b.id === book.id) ?
             prevState.books.map(prevBook => prevBook.id === book.id ? { ...prevBook, shelf } : prevBook ) 
           :
-            prevState.books.concat({ ...book, shelf })
+            prevState.books.concat({ ...book, shelf });
         
         return { books: newBooks.filter(newBook => newBook.shelf !== 'none')};
       });

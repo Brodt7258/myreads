@@ -12,12 +12,14 @@ class BookSearch extends Component {
   }
 
   updateQuery = (event) => {
-    const query = event.target.value.trim();
+    const query = event.target.value;
 
     this.setState({ query });
 
-    if (query) {
-      BooksAPI.search(query)
+    const trimmedQuery = query[query.length - 1] === ' ' ? query.substring(0, query.length - 1) : query;
+
+    if (trimmedQuery) {
+      BooksAPI.search(trimmedQuery)
         .then(found => {
           if (!found || found.error) {
             this.setState({ found: [], err: true });
