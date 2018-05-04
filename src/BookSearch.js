@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
+import debounce from 'lodash/debounce';
 
 import * as BooksAPI from './BooksAPI';
 import Shelf from './Shelf';
@@ -11,16 +12,26 @@ class BookSearch extends Component {
     err: false
   }
 
-  updateQuery = (event) => {
+  // constructor() {
+  //   super(props);
+  //   this.updateQuery = debounce(500, this.updateQuery);
+  // }
+
+  // updateWrapper = (e) => {
+  //   this.updateQuery(e.target.value);
+  // }
+
+  updateQuery = event => {
     const query = event.target.value;
 
     this.setState({ query });
 
-    const trimmedQuery = query[query.length - 1] === ' ' ? query.substring(0, query.length - 1) : query;
-
-    if (trimmedQuery) {
-      BooksAPI.search(trimmedQuery)
+    if (query) {
+      BooksAPI.search(query)
         .then(found => {
+          if (this.state.query !== query) {
+            return;
+          }
           if (!found || found.error) {
             this.setState({ found: [], err: true });
           } else {
@@ -38,13 +49,12 @@ class BookSearch extends Component {
     } else {
       this.setState({ found: [], err: false });
     }
-  }
+  };
 
   onBookUpdate = (book, shelf) => {
-    console.log('BookSearch onBookUpdate');
+    //console.log('BookSearch onBookUpdate');
     this.props.onBookUpdate(book, shelf);
     this.props.history.push('/');
-    
   }
 
   render() {
@@ -58,15 +68,16 @@ class BookSearch extends Component {
               type="text"
               placeholder="Search by title or author"
               value={query}
-              onChange={this.updateQuery}
+              onKeyUp={this.updateQuery.bind(this)}
             />
           </div>
         </div>
         <div className="search-books-results">
-          {err ? 
-              <Shelf title="Found 0 results, try again"/> 
-            : 
-              found.length > 0 && <Shelf title={`Found ${found.length} results`} books={found} onBookUpdate={this.onBookUpdate} />}
+          {err ? (
+            <Shelf title="Found 0 results, try again"/>
+          ):( 
+            found.length > 0 && <Shelf title={`Found ${found.length} results`} books={found} onBookUpdate={this.onBookUpdate} />
+          )}
         </div>
       </div>
     );
